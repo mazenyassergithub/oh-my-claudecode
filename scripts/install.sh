@@ -1058,9 +1058,10 @@ if command -v jq &> /dev/null; then
   ' 2>/dev/null)
 fi
 
-# Fallback: simple grep extraction if jq fails
+# Fallback: portable extraction if jq fails (works on macOS and Linux)
 if [ -z "$PROMPT" ] || [ "$PROMPT" = "null" ]; then
-  PROMPT=$(echo "$INPUT" | grep -oP '"(prompt|content|text)"\s*:\s*"\K[^"]+' | head -1)
+  # Use sed for portable JSON value extraction (no grep -P which is GNU-only)
+  PROMPT=$(echo "$INPUT" | sed -n 's/.*"\(prompt\|content\|text\)"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\2/p' | head -1)
 fi
 
 # Exit if no prompt found
@@ -1211,6 +1212,31 @@ INPUT=$(cat)
     exit 0
   fi
 
+  # Portable function to convert ISO date to epoch (works on Linux and macOS)
+  iso_to_epoch() {
+    local iso_date="$1"
+    local epoch=""
+
+    # Try GNU date first (Linux)
+    epoch=$(date -d "$iso_date" +%s 2>/dev/null)
+    if [ $? -eq 0 ] && [ -n "$epoch" ]; then
+      echo "$epoch"
+      return 0
+    fi
+
+    # Try BSD/macOS date (need to strip timezone suffix and reformat)
+    # ISO format: 2024-01-15T10:30:00+00:00 or 2024-01-15T10:30:00Z
+    local clean_date=$(echo "$iso_date" | sed 's/[+-][0-9][0-9]:[0-9][0-9]$//' | sed 's/Z$//' | sed 's/T/ /')
+    epoch=$(date -j -f "%Y-%m-%d %H:%M:%S" "$clean_date" +%s 2>/dev/null)
+    if [ $? -eq 0 ] && [ -n "$epoch" ]; then
+      echo "$epoch"
+      return 0
+    fi
+
+    # Fallback: return 0 (will trigger update check)
+    echo "0"
+  }
+
   # Check if we should check for updates (rate limiting)
   should_check() {
     if [ ! -f "$VERSION_FILE" ]; then
@@ -1226,8 +1252,8 @@ INPUT=$(cat)
       return 0  # No last check time - should check
     fi
 
-    # Calculate hours since last check
-    local last_check_epoch=$(date -d "$last_check" +%s 2>/dev/null || echo 0)
+    # Calculate hours since last check (using portable iso_to_epoch)
+    local last_check_epoch=$(iso_to_epoch "$last_check")
     local now_epoch=$(date +%s)
     local diff_hours=$(( (now_epoch - last_check_epoch) / 3600 ))
 
@@ -1306,12 +1332,49 @@ EOF
     fi
   }
 
+  # Lock file management for concurrent install protection
+  LOCK_FILE="$HOME/.claude/.sisyphus-update.lock"
+  LOCK_TIMEOUT=300  # 5 minutes - stale lock threshold
+
+  acquire_lock() {
+    # Check if lock exists and is stale
+    if [ -f "$LOCK_FILE" ]; then
+      local lock_time=$(cat "$LOCK_FILE" 2>/dev/null)
+      local now=$(date +%s)
+      local lock_age=$((now - lock_time))
+
+      if [ "$lock_age" -lt "$LOCK_TIMEOUT" ]; then
+        log "Another update is in progress (lock age: ${lock_age}s)"
+        return 1  # Lock is held by another process
+      else
+        log "Removing stale lock (age: ${lock_age}s)"
+        rm -f "$LOCK_FILE"
+      fi
+    fi
+
+    # Create lock file with current timestamp
+    echo "$(date +%s)" > "$LOCK_FILE"
+    return 0
+  }
+
+  release_lock() {
+    rm -f "$LOCK_FILE" 2>/dev/null
+  }
+
   # Main logic
   main() {
     # Check rate limiting
     if ! should_check; then
       exit 0
     fi
+
+    # Acquire lock to prevent concurrent installations
+    if ! acquire_lock; then
+      exit 0  # Another instance is updating, skip
+    fi
+
+    # Ensure lock is released on exit
+    trap release_lock EXIT
 
     log "Starting silent update check..."
 

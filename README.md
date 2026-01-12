@@ -59,7 +59,7 @@ curl -fsSL https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claude-sisyphus/m
 npm install -g oh-my-claude-sisyphus
 ```
 
-> **Windows Users**: This is the recommended installation method. Requires Node.js 18+.
+> **Windows Users**: This is the recommended installation method. Requires Node.js 20+.
 
 ### Manual Install (macOS/Linux)
 
@@ -199,6 +199,11 @@ Just include these words anywhere in your prompt:
 ## Auto-Update
 
 Oh-my-claude-sisyphus includes a silent auto-update system that checks for updates in the background. Updates are applied automatically without interrupting your workflow.
+
+Features:
+- **Rate-limited**: Checks at most once every 24 hours
+- **Concurrent-safe**: Lock file prevents simultaneous update attempts
+- **Cross-platform**: Works on both macOS and Linux
 
 To manually check for updates:
 ```bash
@@ -627,8 +632,8 @@ If you're coming from oh-my-opencode:
 
 - [Claude Code](https://docs.anthropic.com/claude-code) installed
 - Anthropic API key (`ANTHROPIC_API_KEY` environment variable)
-- **Windows**: Node.js 18+ (for npm installation)
-- **macOS/Linux**: Bash shell (default) or Node.js 18+ (optional)
+- **Windows**: Node.js 20+ (for npm installation)
+- **macOS/Linux**: Bash shell (default) or Node.js 20+ (optional)
 
 ### Platform Support
 
@@ -637,6 +642,8 @@ If you're coming from oh-my-opencode:
 | **Windows** | `npm install -g` | Node.js (.mjs) |
 | **macOS** | curl or npm | Bash (.sh) |
 | **Linux** | curl or npm | Bash (.sh) |
+
+> **Note**: Bash hooks are fully portable across macOS and Linux (no GNU-specific dependencies).
 
 > **Advanced**: Set `SISYPHUS_USE_NODE_HOOKS=1` to use Node.js hooks on macOS/Linux.
 
