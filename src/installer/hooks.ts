@@ -354,6 +354,16 @@ export const HOOKS_SETTINGS_CONFIG_BASH = {
         ]
       }
     ],
+    PreToolUse: [
+      {
+        hooks: [
+          {
+            type: "command" as const,
+            command: "bash $HOME/.claude/hooks/pre-tool-use.sh"
+          }
+        ]
+      }
+    ],
     PostToolUse: [
       {
         hooks: [
@@ -405,6 +415,18 @@ export const HOOKS_SETTINGS_CONFIG_NODE = {
             command: isWindows()
               ? 'node "%USERPROFILE%\\.claude\\hooks\\session-start.mjs"'
               : 'node "$HOME/.claude/hooks/session-start.mjs"'
+          }
+        ]
+      }
+    ],
+    PreToolUse: [
+      {
+        hooks: [
+          {
+            type: "command" as const,
+            command: isWindows()
+              ? 'node "%USERPROFILE%\\.claude\\hooks\\pre-tool-use.mjs"'
+              : 'node "$HOME/.claude/hooks/pre-tool-use.mjs"'
           }
         ]
       }
@@ -463,6 +485,7 @@ export function getHookScriptsBash(): Record<string, string> {
     'stop-continuation.sh': loadTemplate('stop-continuation.sh'),
     'persistent-mode.sh': loadTemplate('persistent-mode.sh'),
     'session-start.sh': loadTemplate('session-start.sh'),
+    'pre-tool-use.sh': loadTemplate('pre-tool-use.sh'),
     'post-tool-use.sh': loadTemplate('post-tool-use.sh')
   };
 }
@@ -477,6 +500,7 @@ export function getHookScriptsNode(): Record<string, string> {
     'stop-continuation.mjs': loadTemplate('stop-continuation.mjs'),
     'persistent-mode.mjs': loadTemplate('persistent-mode.mjs'),
     'session-start.mjs': loadTemplate('session-start.mjs'),
+    'pre-tool-use.mjs': loadTemplate('pre-tool-use.mjs'),
     'post-tool-use.mjs': loadTemplate('post-tool-use.mjs')
   };
 }

@@ -16,6 +16,23 @@ This skill enhances Claude's capabilities by:
 4. **Persistence Enforcement**: Never stopping until all tasks are verified complete
 5. **Smart Model Routing**: Using tiered agents to save tokens
 
+## DELEGATION ENFORCEMENT (CRITICAL)
+
+**YOU ARE AN ORCHESTRATOR, NOT AN IMPLEMENTER.**
+
+| Action | YOU Do | DELEGATE |
+|--------|--------|----------|
+| Read files for context | ✓ | |
+| Track progress (TODO) | ✓ | |
+| Spawn parallel agents | ✓ | |
+| **ANY code change** | ✗ NEVER | executor-low/executor/executor-high |
+| **UI work** | ✗ NEVER | designer/designer-high |
+| **Docs** | ✗ NEVER | writer |
+
+**Path Exception**: Only write to `.omc/`, `.claude/`, `CLAUDE.md`, `AGENTS.md`
+
+The PreToolUse hook will warn you if you attempt direct code changes.
+
 ## Smart Model Routing (CRITICAL - SAVE TOKENS)
 
 **Choose tier based on task complexity: LOW (haiku) → MEDIUM (sonnet) → HIGH (opus)**
@@ -73,7 +90,7 @@ Task(subagent_type="explore-medium", model="sonnet", prompt="Find all authentica
 
 **Run Blocking** (foreground):
 - Quick status checks: git status, ls, pwd
-- File reads, edits
+- File reads (NOT edits - delegate edits to executor)
 - Simple commands
 
 ## Verification Checklist

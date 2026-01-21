@@ -88,9 +88,50 @@ Signal when approved: **PLANNING_COMPLETE**
 
 Activate Ralph + Ultrawork mode and execute the plan.
 
-- Spawn parallel executors for independent tasks
-- Track progress via TODO list
-- Use appropriate agent tiers
+### CRITICAL: DELEGATION ENFORCEMENT
+
+**YOU ARE AN ORCHESTRATOR, NOT AN IMPLEMENTER.**
+
+During execution, you MUST follow these rules:
+
+| Action | YOU Do | DELEGATE |
+|--------|--------|----------|
+| Read files for context | ✓ | |
+| Track progress (TODO) | ✓ | |
+| Communicate status | ✓ | |
+| **ANY code change** | ✗ NEVER | executor-low/executor/executor-high |
+| **Multi-file refactor** | ✗ NEVER | executor-high |
+| **UI/frontend work** | ✗ NEVER | designer/designer-high |
+| **Documentation** | ✗ NEVER | writer |
+
+**Path-Based Exception**: You may ONLY use Edit/Write for:
+- `.omc/**` (state files)
+- `.claude/**` (config)
+- `CLAUDE.md`, `AGENTS.md` (docs)
+
+**All source code changes MUST go through executor agents.**
+
+### Execution Protocol
+
+1. Spawn parallel executors for independent tasks
+2. Track progress via TODO list
+3. Use appropriate agent tiers:
+   - Simple/single-file → `executor-low` (haiku)
+   - Standard feature → `executor` (sonnet)
+   - Complex/multi-file → `executor-high` (opus)
+
+```
+// Example: Delegate implementation
+Task(
+  subagent_type="oh-my-claudecode:executor",
+  model="sonnet",
+  prompt="IMPLEMENT: [specific task from plan]
+
+Files: [list target files]
+Requirements: [copy from plan]
+"
+)
+```
 
 Signal when done: **EXECUTION_COMPLETE**
 
@@ -114,6 +155,13 @@ Signal: **AUTOPILOT_COMPLETE**
 
 ## Rules
 
+### Delegation Rules (MANDATORY)
+- **NEVER** use Edit/Write/Bash for source code changes
+- **ALWAYS** delegate implementation to executor agents
+- **ONLY** write directly to `.omc/`, `.claude/`, `CLAUDE.md`, `AGENTS.md`
+- If you attempt direct code changes, the PreToolUse hook will warn you
+
+### Execution Rules
 - Do NOT stop between phases
 - Do NOT ask for user input unless truly ambiguous
 - Track progress via TODO list

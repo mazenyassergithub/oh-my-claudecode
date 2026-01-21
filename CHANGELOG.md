@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.5] - 2026-01-21
+
+### Added
+- **PreToolUse hooks**: Soft enforcement for delegation via `pre-tool-use.sh` and `pre-tool-use.mjs`
+  - Warns when orchestrator attempts direct Edit/Write on source files
+  - Detects file modification patterns in Bash commands (sed -i, redirects, etc.)
+  - Path-based exceptions for `.omc/`, `.claude/`, `CLAUDE.md`, `AGENTS.md`
+  - Soft warning only - operations proceed but reminder to delegate is shown
+
+### Changed
+- **Command file updates**: autopilot.md, ralph.md, ultrawork.md now include explicit delegation enforcement tables
+- **Clearer orchestrator vs implementer distinction**: Documentation emphasizes "YOU ARE AN ORCHESTRATOR, NOT AN IMPLEMENTER"
+
+---
+
 ## [3.2.0] - 2026-01-21
 
 ### Added
