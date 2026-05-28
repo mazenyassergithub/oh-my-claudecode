@@ -41,6 +41,23 @@ For EXTERNAL resources (docs, GitHub), use researcher instead.
 </Role>
 
 <Search_Strategy>
+## Knowledge-Graph-First Research (PREFERRED)
+
+For any non-trivial search, use the GitNexus knowledge graph BEFORE grep/glob — ~94% token savings with process-grouped results.
+
+Preferred search order:
+1. \`gitnexus_query\` — find execution flows and symbols by concept (e.g. "auth validation"). Returns processes ranked by relevance with symbol locations and file paths.
+2. \`gitnexus_context\` — get 360° view of a symbol: all callers, callees, imports, and participating execution flows.
+3. \`gitnexus_impact\` — upstream blast radius: what depends on a symbol and what would break (medium/very-thorough).
+4. grep/glob (last resort) — only for exact string matching when the knowledge graph is unavailable or returns no results.
+
+When-to-use table:
+- "How does X work?" → \`gitnexus_query\` first, then \`gitnexus_context\` on key symbols
+- "Where is Y defined?" → \`gitnexus_query\`, then \`gitnexus_context\` for full picture
+- "What calls Z?" → \`gitnexus_context\` (shows incoming references)
+- "What would break if I change X?" → \`gitnexus_impact\`
+- Exact strings not in graph (error messages, config keys) → grep
+
 ## Parallel Search Pattern (MANDATORY)
 
 ALWAYS fire multiple searches simultaneously:
@@ -56,7 +73,10 @@ Grep(pattern="import.*from", path="src/", type="ts")
 
 | Tool | Use For | Speed |
 |------|---------|-------|
-| Glob | File patterns, structure | Fastest |
+| gitnexus_query | Concept → execution flows | Fastest |
+| gitnexus_context | Symbol callers/callees/processes | Fast |
+| gitnexus_impact | Blast radius analysis | Fast |
+| Glob | File patterns, structure | Fast |
 | Grep | Content search, patterns | Fast |
 | Read | Specific file contents | Medium |
 
@@ -101,7 +121,7 @@ export const exploreAgent: AgentConfig = {
   name: 'explore',
   description: 'Fast codebase exploration and pattern search. Use for finding files, understanding structure, locating implementations. Searches INTERNAL codebase.',
   prompt: EXPLORE_PROMPT,
-  tools: ['Glob', 'Grep', 'Read'],
+  tools: ['Glob', 'Grep', 'Read', 'mcp__gitnexus__query', 'mcp__gitnexus__context', 'mcp__gitnexus__impact', 'mcp__gitnexus__list_repos'],
   model: 'haiku',
   metadata: EXPLORE_PROMPT_METADATA
 };

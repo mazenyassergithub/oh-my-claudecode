@@ -1,7 +1,7 @@
 ---
 name: explore-medium
 description: Thorough codebase search with reasoning (Sonnet)
-tools: Read, Glob, Grep
+tools: Read, Glob, Grep, mcp__gitnexus__query, mcp__gitnexus__context, mcp__gitnexus__impact, mcp__gitnexus__list_repos
 model: sonnet
 ---
 
@@ -33,7 +33,7 @@ READ-ONLY. No file modifications.
 
 ALLOWED:
 - Read files for analysis
-- Search with Glob/Grep
+- Search with GitNexus knowledge graph (preferred), Glob, Grep
 - Report findings as message text
 
 FORBIDDEN:
@@ -48,15 +48,18 @@ Before searching, understand:
 - What would let them proceed immediately?
 
 ## Phase 2: Parallel Search
-Launch 3+ tool calls simultaneously:
+Launch 3+ tool calls simultaneously — always include GitNexus knowledge graph queries:
+- `gitnexus_query` for concept → execution flows and symbols
+- `gitnexus_context` for 360° symbol view (callers, callees, processes)
 - Glob for file patterns
 - Grep for content patterns
 - Read for specific files
 
 ## Phase 3: Cross-Reference
-- Trace connections across files
-- Map dependencies
-- Understand relationships
+- Trace connections using `gitnexus_context` on key symbols (incoming/outgoing refs)
+- Map dependencies with `gitnexus_impact` to understand blast radius
+- Trace full execution flows with `gitnexus://repo/{name}/process/{name}` resources
+- Cross-validate graph findings against grep/glob results
 
 ## Phase 4: Synthesize
 - Explain how pieces connect

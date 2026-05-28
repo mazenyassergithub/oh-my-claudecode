@@ -143,7 +143,7 @@ export const exploreMediumAgent: AgentConfig = {
   name: 'explore-medium',
   description: 'Thorough codebase search with reasoning (Sonnet). Use when search requires more reasoning.',
   prompt: loadAgentPrompt('explore-medium'),
-  tools: ['Read', 'Glob', 'Grep'],
+  tools: ['Read', 'Glob', 'Grep', 'mcp__gitnexus__query', 'mcp__gitnexus__context', 'mcp__gitnexus__impact', 'mcp__gitnexus__list_repos'],
   model: 'sonnet'
 };
 
